@@ -7,9 +7,9 @@
 <form action="{{ route('session.store') }}" method="POST">
     @csrf
 
-    Naam: <br>
-    <input type="text" name="name" value="{{ old('name') }}"><br>
-    @error('name')
+    E-mail: <br>
+    <input type="text" name="email" value="{{ old('email') }}"><br>
+    @error('email')
         <p>{{ $message }}</p>
     @enderror
     

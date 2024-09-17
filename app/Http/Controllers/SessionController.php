@@ -20,11 +20,9 @@ class SessionController extends Controller
     {
         $validated = $request->validated();
         
-        if (Auth::attempt($validated))
+        if (auth()->attempt($validated))
         {
-            dd('hey');
-
-            return redirect('/')->with('success', 'Je bent ingelogd!');
+            return redirect('/register')->with('success', 'Je bent ingelogd!');
         } 
 
         throw ValidationException::withMessages([
