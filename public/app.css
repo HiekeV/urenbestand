@@ -1,0 +1,20 @@
+body { 
+    width: 70%;
+    margin: 0 auto; 
+  } 
+
+#containerOneLine h3,
+#containerOneLine p,
+#containerOneLine form {
+    display: inline;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.pagination li {
+  width: 3%;
+  float:left;
+  margin-bottom: 40px;
+}
