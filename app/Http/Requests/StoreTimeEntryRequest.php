@@ -13,7 +13,7 @@ class StoreTimeEntryRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,7 @@ class StoreTimeEntryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'csv_file' => 'required|file|mimes:csv,txt'
         ];
     }
 }

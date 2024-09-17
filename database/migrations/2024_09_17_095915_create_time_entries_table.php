@@ -15,6 +15,12 @@ class CreateTimeEntriesTable extends Migration
     {
         Schema::create('time_entries', function (Blueprint $table) {
             $table->id();
+            $table->integer('financial_year');
+            $table->integer('week');
+            $table->date('date');
+            $table->integer('employee_number');
+            $table->double('hours');
+            $table->string('hour_code',20);
             $table->timestamps();
         });
     }

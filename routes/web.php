@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\TimeEntryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,7 +31,14 @@ Route::middleware(['guest'])->group(function () {
 
     Route::post('/login', [SessionController::class, 'store'])->name('session.store');
 
+    // CSV
+    Route::get('/edit', [TimeEntryController::class, 'edit'])->name('time-entries.edit');
 
+    Route::get('/upload-csv/create', [TimeEntryController::class, 'create'])->name('time-entries.create');
+    
+    Route::post('/upload-csv', [TimeEntryController::class, 'store'])->name('time-entries.store');
+
+    Route::put('/update/{time-entries}', [TimeEntryController::class, 'update'])->name('time-entries.update');
 
 });
 
