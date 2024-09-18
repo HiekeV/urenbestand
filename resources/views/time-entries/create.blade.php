@@ -11,6 +11,9 @@
         <p>{{ $message }}</p>
     @enderror
     
+    <p>NB: bij uploaden worden enventueel bestaande gegevens verwijderd.</p> 
+    <br>
+
     <input type="submit" value="uploaden">
 </form>
 

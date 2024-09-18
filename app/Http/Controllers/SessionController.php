@@ -20,20 +20,20 @@ class SessionController extends Controller
     {
         $validated = $request->validated();
         
-        if (auth()->attempt($validated))
+        if (Auth::attempt($validated))
         {
-            return redirect('/register')->with('success', 'Je bent ingelogd!');
+            return view('time-entries.create');
         } 
 
         throw ValidationException::withMessages([
-            'name' => 'Deze inloggegevens zijn onbekend.']);
+            'email' => 'Deze inloggegevens zijn onbekend.']);
 
     }
 
     public function destroy()
     {
-        auth()->logout();
+        Auth::logout();
 
-        return redirect('/')->with('success', 'Tot ziens!');
+        return view('session.create');
     }
 }

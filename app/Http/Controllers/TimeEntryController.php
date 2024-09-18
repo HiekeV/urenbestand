@@ -7,6 +7,8 @@ use App\Http\Requests\StoreTimeEntryRequest;
 use App\Http\Requests\UpdateTimeEntryRequest;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Facade\FlareClient\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class TimeEntryController extends Controller
 {
@@ -17,7 +19,7 @@ class TimeEntryController extends Controller
     //  */
     // public function index()
     // {
-    //     //
+            // 
     // }
 
     /**
@@ -38,50 +40,46 @@ class TimeEntryController extends Controller
      */
     public function store(StoreTimeEntryRequest $request)
     {
+        TimeEntry::query()->delete();
+
         $csvFile = $request->file('csv_file');
         
-        // Open the CSV file
         $csvData = file_get_contents($csvFile->getRealPath());
         
-        // Split the CSV data into rows
         $rows = explode("\n", $csvData);
         
-        // Skip the header row
         array_shift($rows);
 
-        // Insert the data into the database
+        $customId = 1;
+
         foreach ($rows as $row) {
             $data = str_getcsv($row, ';');
 
-            // Ensure the row has at least 5 columns
-            if (count($data) < 5) {
-                // Optionally log or handle the error here
-                continue; // Skip this row
-            }
-                    // Convert date from dd/mm/yyyy to yyyy-mm-dd
             try {
                 $formattedDate = Carbon::createFromFormat('d/m/Y', $data[2])->format('Y-m-d');
             } catch (\Exception $e) {
-                // Handle invalid date format if necessary
-                continue; // Skip this row if the date is invalid
+                continue; 
             }
 
-            // Replace comma with dot for hours, to handle European-style decimals
             $hours = str_replace(',', '.', $data[4]);
 
             DB::table('time_entries')->insert([
+                'custom_id' => $customId,
                 'financial_year' => $data[0],
                 'week' => $data[1],
-                'date' => $formattedDate,
+                'date' => $formattedDate ,
                 'employee_number' => $data[3],
-                'hours' => $hours,  // Corrected hours
+                'hours' => $hours,
                 'hour_code' => $data[5],
             ]);
+            $customId++;
         }
 
-        return redirect()->route('time-entries.edit')->with('success', 'CSV file imported successfully.');
-    }
+        $timeEntries = TimeEntry::all();
 
+        return view('time-entries.edit', ['timeEntries' => $timeEntries]);
+        
+    }
 
 //     /**
 //      * Display the specified resource.
@@ -116,17 +114,70 @@ class TimeEntryController extends Controller
      */
     public function update(UpdateTimeEntryRequest $request, TimeEntry $timeEntry)
     {
-        //
+        $validated = $request->validated();
+
+        $timeEntry->update($validated);
+
+        return redirect()->back();
     }
 
-//     /**
-//      * Remove the specified resource from storage.
-//      *
-//      * @param  \App\Models\TimeEntry  $timeEntry
-//      * @return \Illuminate\Http\Response
-//      */
-//     public function destroy(TimeEntry $timeEntry)
-//     {
-//         //
-//     }
+    public function download()
+    {
+        $timeEntries = TimeEntry::all();
+
+        $fileName = 'download.csv';
+        
+        $filePath = 'csv/' . $fileName;
+
+        $csvContent = fopen('php://temp', 'r+');
+
+        fputcsv($csvContent, ['Boekjaar','Week','Datum','Persnr','Uren','Uurcode']);
+
+        foreach ($timeEntries as $entry) {
+            
+            $hours = str_replace('.', ',', $entry->hours);
+
+            $formattedDate = Carbon::createFromFormat('Y-m-d', $entry->date)->format('d/m/Y');
+
+            fputcsv($csvContent, [
+                $entry->financial_year,
+                $entry->week,
+                $formattedDate,
+                $entry->employee_number,
+                $hours,
+                $entry->hour_code,
+                ], ';');
+        }
+
+        rewind($csvContent);
+
+        $csvString = stream_get_contents($csvContent);
+        fclose($csvContent);
+
+        Storage::put($filePath, $csvString);
+
+        return Storage::download($filePath, $fileName);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\TimeEntry  $timeEntry
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(TimeEntry $timeEntry)
+    {
+        $timeEntry->delete();
+
+        $timeEntries = TimeEntry::all();
+
+        return view('time-entries.edit', ['timeEntries' => $timeEntries]);
+    }
+
+    public function destroyAll()
+    {
+        TimeEntry::query()->delete();
+
+        return view('time-entries.create');
+    }
 }

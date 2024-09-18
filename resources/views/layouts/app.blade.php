@@ -10,14 +10,15 @@
 <body>
     <ul>
         @auth
-        <li><p>hallo</p></li>
+        <form method="POST" action="{{ route('session.destroy') }}">
         @csrf
-        <li><button type="submit">Uitloggen</button></li>
+            <button type="submit">Uitloggen</button>
+        </form>
 
         @else
 
         <li><a href="{{ route('auth.create') }}">Registreren</a></li>
-        <li><a href="{{ route('session.create') }}">Inloggen</a></li>
+        <li><a href="{{ route('login') }}">Inloggen</a></li>
 
         @endauth
 

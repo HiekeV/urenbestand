@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -16,9 +18,13 @@ class AuthController extends Controller
     public function store(RegisterRequest $request)
     {
         $validated = $request->validated();
+
+        $validated['password'] = Hash::make($validated['password']);
                 
         $user = User::create($validated);
 
-        return redirect('/')->with('success', 'Je account is aangemaakt.');
+        Auth::login($user);
+
+        return view('time-entries.create');
     }
 }

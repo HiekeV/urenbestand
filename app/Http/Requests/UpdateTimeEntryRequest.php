@@ -13,7 +13,7 @@ class UpdateTimeEntryRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,12 @@ class UpdateTimeEntryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'financial_year' => ['required'],
+            'week' => ['required'],
+            'date' => ['required'],
+            'employee_number' => ['required'],
+            'hours' => ['required'],
+            'hour_code' => ['required'],
         ];
     }
 }
