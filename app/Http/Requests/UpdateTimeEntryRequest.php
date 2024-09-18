@@ -24,12 +24,12 @@ class UpdateTimeEntryRequest extends FormRequest
     public function rules()
     {
         return [
-            'financial_year' => ['required'],
-            'week' => ['required'],
-            'date' => ['required'],
-            'employee_number' => ['required'],
-            'hours' => ['required'],
-            'hour_code' => ['required'],
+            'financial_year' => ['required','numeric'],
+            'week' => ['required','numeric'],
+            'date' => ['required','date'],
+            'employee_number' => ['required','numeric'],
+            'hours' => ['required','numeric'],
+            'hour_code' => ['required','string','max:20'],
         ];
     }
 }
