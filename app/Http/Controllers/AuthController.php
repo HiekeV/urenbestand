@@ -25,6 +25,6 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return view('time-entries.create');
+        return redirect()->route('time-entries.create');
     }
 }

@@ -12,16 +12,6 @@ use Illuminate\Support\Facades\Storage;
 
 class TimeEntryController extends Controller
 {
-    // /**
-    //  * Display a listing of the resource.
-    //  *
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function index()
-    // {
-            // 
-    // }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -75,22 +65,9 @@ class TimeEntryController extends Controller
             $customId++;
         }
 
-        $timeEntries = TimeEntry::all();
-
-        return view('time-entries.edit', ['timeEntries' => $timeEntries]);
+        return redirect()->route('time-entries.edit');
         
     }
-
-//     /**
-//      * Display the specified resource.
-//      *
-//      * @param  \App\Models\TimeEntry  $timeEntry
-//      * @return \Illuminate\Http\Response
-//      */
-//     public function show(TimeEntry $timeEntry)
-//     {
-//         //
-//     }
 
     /**
      * Show the form for editing the specified resource.
@@ -118,7 +95,7 @@ class TimeEntryController extends Controller
 
         $timeEntry->update($validated);
 
-        return redirect()->back();
+        return redirect()->route('time-entries.edit');
     }
 
     public function download()
@@ -169,15 +146,13 @@ class TimeEntryController extends Controller
     {
         $timeEntry->delete();
 
-        $timeEntries = TimeEntry::all();
-
-        return view('time-entries.edit', ['timeEntries' => $timeEntries]);
+        return redirect()->route('time-entries.edit');
     }
 
     public function destroyAll()
     {
         TimeEntry::query()->delete();
 
-        return view('time-entries.create');
+        return redirect()->route('time-entries.create');
     }
 }

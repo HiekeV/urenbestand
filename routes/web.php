@@ -35,9 +35,9 @@ Route::middleware(['auth'])->group(function () {
     
     Route::post('/logout', [SessionController::class, 'destroy'])->name('session.destroy');
 
-    Route::get('/upload-csv/create', [TimeEntryController::class, 'create'])->name('time-entries.create');
+    Route::get('/upload-csv', [TimeEntryController::class, 'create'])->name('time-entries.create');
     
-    Route::post('/upload-csv', [TimeEntryController::class, 'store'])->name('time-entries.store');
+    Route::post('/upload-csv/store', [TimeEntryController::class, 'store'])->name('time-entries.store');
     
     Route::get('/edit', [TimeEntryController::class, 'edit'])->name('time-entries.edit');
 

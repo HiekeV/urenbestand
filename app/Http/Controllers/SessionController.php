@@ -22,7 +22,8 @@ class SessionController extends Controller
         
         if (Auth::attempt($validated))
         {
-            return view('time-entries.create');
+            return redirect()->route('time-entries.create');
+            
         } 
 
         throw ValidationException::withMessages([
@@ -34,6 +35,6 @@ class SessionController extends Controller
     {
         Auth::logout();
 
-        return view('session.create');
+        return redirect()->route('login');
     }
 }

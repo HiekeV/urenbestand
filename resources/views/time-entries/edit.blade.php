@@ -1,9 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
-    @method('PUT')
-    @csrf
     
     <a href="{{ route('time-entries.download') }}">Download de bewerkte CSV</a><br>
 
@@ -27,7 +24,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($timeEntries as $index => $timeEntry)
+            @foreach ($timeEntries as $timeEntry)
             <tr>
                 <form action="{{ route('time-entries.update', $timeEntry) }}" method="POST">
                     @csrf
@@ -41,19 +38,15 @@
                     <td><input type="text" name="hour_code" value="{{ $timeEntry->hour_code }}"></td>
                     <td><button type="submit">Update</button></td>
                 </form>
-                <td><form action="{{ route('time-entries.destroy', $timeEntry) }}" method="POST">
+                <form action="{{ route('time-entries.destroy', $timeEntry) }}" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="submit">Verwijder</button>
-                </form></td>
+                    <td><button type="submit">Verwijder</button></td>
+                </form>
             </tr>
             @endforeach
         </tbody>
+        
     </table>
-
-
-</form>
-
-
 
 @endsection
