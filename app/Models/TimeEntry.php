@@ -22,4 +22,9 @@ class TimeEntry extends Model
         'hours',
         'hour_code',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

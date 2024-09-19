@@ -15,6 +15,7 @@ class CreateTimeEntriesTable extends Migration
     {
         Schema::create('time_entries', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
             $table->integer('custom_id');
             $table->integer('financial_year');
             $table->integer('week');

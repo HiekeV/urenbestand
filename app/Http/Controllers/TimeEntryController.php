@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateTimeEntryRequest;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Facade\FlareClient\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class TimeEntryController extends Controller
@@ -30,7 +31,8 @@ class TimeEntryController extends Controller
      */
     public function store(StoreTimeEntryRequest $request)
     {
-        TimeEntry::query()->delete();
+        // TimeEntry::query()->delete();
+        Auth::user()->timeEntries->each->delete();
 
         $csvFile = $request->file('csv_file');
         
@@ -54,6 +56,7 @@ class TimeEntryController extends Controller
             $hours = str_replace(',', '.', $data[4]);
 
             DB::table('time_entries')->insert([
+                'user_id' => Auth::id(),
                 'custom_id' => $customId,
                 'financial_year' => $data[0],
                 'week' => $data[1],
@@ -77,7 +80,8 @@ class TimeEntryController extends Controller
      */
     public function edit(TimeEntry $timeEntry)
     {
-        $timeEntries = TimeEntry::all();
+        // $timeEntries = TimeEntry::all();
+        $timeEntries = Auth::user()->timeEntries;
 
         return view('time-entries.edit',['timeEntries' => $timeEntries]);
     }
@@ -100,7 +104,7 @@ class TimeEntryController extends Controller
 
     public function download()
     {
-        $timeEntries = TimeEntry::all();
+        $timeEntries = Auth::user()->timeEntries;
 
         $fileName = 'download.csv';
         
@@ -151,7 +155,7 @@ class TimeEntryController extends Controller
 
     public function destroyAll()
     {
-        TimeEntry::query()->delete();
+        Auth::user()->timeEntries->each->delete();
 
         return redirect()->route('time-entries.create');
     }
