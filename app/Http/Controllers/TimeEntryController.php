@@ -31,7 +31,6 @@ class TimeEntryController extends Controller
      */
     public function store(StoreTimeEntryRequest $request)
     {
-        // TimeEntry::query()->delete();
         Auth::user()->timeEntries->each->delete();
 
         $csvFile = $request->file('csv_file');
@@ -80,7 +79,6 @@ class TimeEntryController extends Controller
      */
     public function edit(TimeEntry $timeEntry)
     {
-        // $timeEntries = TimeEntry::all();
         $timeEntries = Auth::user()->timeEntries;
 
         return view('time-entries.edit',['timeEntries' => $timeEntries]);
